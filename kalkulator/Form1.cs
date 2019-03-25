@@ -28,40 +28,65 @@ namespace kalkulator
             InitializeComponent();
         }
 
-
         private void numberclick(object sender, EventArgs e)
         {
-            if ((result.Text == "0") || isoperation)
-                result.Clear();
-
-            isoperation = false;
-            alertdivision.Visible = false;
-
             Button button = (Button)sender;
-            if (button.Text == ".")
+
+            alert.Visible = false;
+
+            if (result.TextLength > 20)
             {
-                if(!result.Text.Contains("."))
-                    result.Text = result.Text + button.Text;
+                result.Text = "0";
+                alert.Visible = true;
+                alert.Text = "Wpisano zbyt dużą wartość!";
             }
             else
-                result.Text = result.Text + button.Text;
+            {
+                if ((result.Text == "0") || isoperation)
+                    result.Clear();
+
+                isoperation = false;
+
+                if (button.Text == ".")
+                {
+                    if (!result.Text.Contains("."))
+                        result.Text = result.Text + button.Text;
+                }
+                else
+                    result.Text = result.Text + button.Text;
+            }
         }
 
         private void operatorclick(object sender, EventArgs e)
         {
             Button button = (Button)sender;
 
+            if (result.Text == ".")
+                result.Text = "0";
+
             if (value != 0)
             {
                 breturn.PerformClick();
                 operation = button.Text;
-                labeloperation.Text = result.Text + " " + operation;
+                labeloperation.Text = (Double.Parse(result.Text)) + " " + operation;
                 isoperation = true;
             }
 
             operation = button.Text;
-            value = Double.Parse(result.Text);
-            labeloperation.Text = result.Text + " " + operation;
+
+            if ((value >= double.MaxValue || value <= double.MinValue) || (Double.Parse(result.Text) >= double.MaxValue || Double.Parse(result.Text) <= double.MinValue))
+            {
+                labeloperation.Text = "";
+                value = 0;
+                alert.Visible = true;
+                alert.Text = "Przekroczono zakres zmiennej!";
+            }
+            else
+            {
+                value = Double.Parse(result.Text);
+            }
+
+            labeloperation.Text = (Double.Parse(result.Text)) + " " + operation;
             isoperation = true;
         }
 
@@ -79,6 +104,8 @@ namespace kalkulator
 
         private void breturn_Click(object sender, EventArgs e)
         {
+            if (result.Text == ".") result.Text = "0.";
+            else if (result.Text == "") result.Text = "0";
 
             switch (operation)
             {
@@ -99,7 +126,8 @@ namespace kalkulator
                     {
                         result.Text = (0).ToString();
                         value = 0;
-                        alertdivision.Visible = true;
+                        alert.Visible = true;
+                        alert.Text = "Nie można dzielić przez 0!";
                         break;
                     }
                     else
@@ -111,8 +139,24 @@ namespace kalkulator
                 default:
                     break;
             }
-            
+
+            if (Double.Parse(result.Text) >= double.MaxValue || Double.Parse(result.Text) <= double.MinValue)
+            {
+                labeloperation.Text = "";
+                value = 0;
+                alert.Visible = true;
+                alert.Text = "Przekroczono zakres zmiennej!";
+
+            }
+
             value = Double.Parse(result.Text);
+
+            if (result.Text == "NaN" || result.Text== "∞")
+            {
+                result.Text = "0";
+                alert.Text = "Przekroczono zakres zmiennej!";
+            }
+
             labeloperation.Text = "";
         }
     }
