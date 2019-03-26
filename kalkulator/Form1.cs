@@ -122,7 +122,7 @@ namespace kalkulator
                     break;
 
                 case "/":
-                    if (result.Text.Equals("0"))
+                    if (Double.Parse(result.Text)==0)
                     {
                         result.Text = (0).ToString();
                         value = 0;
@@ -146,7 +146,6 @@ namespace kalkulator
                 value = 0;
                 alert.Visible = true;
                 alert.Text = "Przekroczono zakres zmiennej!";
-
             }
 
             value = Double.Parse(result.Text);
