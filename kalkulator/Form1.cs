@@ -74,12 +74,15 @@ namespace kalkulator
 
             operation = button.Text;
 
-            if ((value >= double.MaxValue || value <= double.MinValue) || (Double.Parse(result.Text) >= double.MaxValue || Double.Parse(result.Text) <= double.MinValue))
+            if ((value >= double.MaxValue || value <= double.MinValue) 
+                || (Double.Parse(result.Text) >= double.MaxValue || 
+                Double.Parse(result.Text) <= double.MinValue))
             {
                 labeloperation.Text = "";
                 value = 0;
                 alert.Visible = true;
                 alert.Text = "Przekroczono zakres zmiennej!";
+                result.Text = "0";
             }
             else
             {
@@ -140,22 +143,20 @@ namespace kalkulator
                     break;
             }
 
-            if (Double.Parse(result.Text) >= double.MaxValue || Double.Parse(result.Text) <= double.MinValue)
+            if ((Double.Parse(result.Text) >= double.MaxValue || Double.Parse(result.Text) <= double.MinValue)
+                || (result.Text=="NaN" || result.Text == "∞"))
             {
                 labeloperation.Text = "";
                 value = 0;
                 alert.Visible = true;
                 alert.Text = "Przekroczono zakres zmiennej!";
+                result.Text = "0";
             }
 
             value = Double.Parse(result.Text);
 
-            if (result.Text == "NaN" || result.Text== "∞")
-            {
-                result.Text = "0";
-                alert.Text = "Przekroczono zakres zmiennej!";
-            }
-
+            isoperation = false;
+            value = 0;
             labeloperation.Text = "";
         }
     }
